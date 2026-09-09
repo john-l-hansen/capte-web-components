@@ -19,6 +19,10 @@ capte-web-components/
                                     a ledger of each time it went live, with what config
 ```
 
+## Agent guidance
+
+All agents start with [AGENTS.md](AGENTS.md), the shared contract, and [docs/agent-workflow.md](docs/agent-workflow.md) for source authority, handoffs, review, and deployment governance.
+
 ## Workflow
 
 1. Build or update a component's `.html` file in its folder.
