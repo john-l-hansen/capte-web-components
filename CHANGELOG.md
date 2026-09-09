@@ -5,6 +5,8 @@ All notable changes to the `capte-web-components` repository (new components add
 ## [Unreleased]
 
 ### Added
+- Codified Capte Figma Design System tokens into `design-system/` (`tokens.css` and `tokens.json`) covering 217 variables, color ramps, typography, and spacing/radii scales.
+- Automated daily Figma sync pipeline via GitHub Actions (`.github/workflows/figma-sync.yml` and `scripts/figma-sync.js`) to open automated Pull Requests when Figma variables or files are updated.
 - Comprehensive multi-agent operating model and component lifecycle documentation in `docs/agent-workflow.md`.
 - Expanded canonical agent contract in `AGENTS.md` covering Foundation (role, tone, authority, brand tokens) and Components (standards, structure, lifecycle).
 - Antigravity workspace rule adapters in `.agent/rules/shared-contract.md` and `.agents/rules/shared-contract.md`.

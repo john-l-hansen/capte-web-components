@@ -23,7 +23,8 @@ We maintain strict authority boundaries so agents know which system owns what:
 | **GitHub** | Code implementation, version history, PR reviews, technical documentation | Live deployment status |
 | **Webflow** | Actual live production runtime, published page DOM, active embeds | Code archiving, version history |
 
-#### Discrepancy Resolution:
+#### Discrepancy Resolution & Automated Sync:
+- **Automated Figma Sync Pipeline**: A scheduled GitHub Actions workflow ([`.github/workflows/figma-sync.yml`](../.github/workflows/figma-sync.yml)) queries the Figma REST API daily. If design tokens or components in Figma are updated, it automatically opens a Pull Request on branch `figma-sync/daily-update`.
 - **Figma differs from Code**: Verify Figma node is marked as approved. Update code in GitHub to match approved Figma design via a PR referencing the Figma node/version.
 - **Webflow differs from GitHub**: If an emergency hotfix was made directly in Webflow, capture the live snippet, diff it against GitHub, open a PR to reconcile the change into the repo, and redeploy from GitHub. Never blindly overwrite without diffing.
 - **Requirements Ambiguity**: When approved sources conflict or design tokens shift, present concise options to John Hansen for decision before proceeding.

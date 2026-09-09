@@ -18,9 +18,11 @@ We operate across specialized AI agents (Claude, ChatGPT / Codex, Antigravity) w
 - **Single Source of Truth**: Because agents do not share a live chat socket, the local repository and git commits act as the shared brain.
 - **Domain Authority Matrix**:
   - 📄 **Google Drive**: Strategic requirements, sales copy, approved business decisions.
-  - 🎨 **Figma**: Visual design intent, interactive UI states, layout tokens.
+  - 🎨 **Figma**: Visual design intent, interactive UI states, layout tokens (synced daily via GitHub Actions).
   - 💻 **GitHub**: Implementation code, pull request reviews, technical documentation.
   - 🌐 **Webflow**: Live production runtime and published embed delivery.
+
+- **Automated Cloud Sync**: A daily GitHub Actions workflow ([`.github/workflows/figma-sync.yml`](.github/workflows/figma-sync.yml)) queries Figma for token/component changes and automatically opens a Pull Request for John Hansen.
 
 For full operating procedures, startup protocols, and handoff templates, see [docs/agent-workflow.md](docs/agent-workflow.md) and [AGENTS.md](AGENTS.md).
 

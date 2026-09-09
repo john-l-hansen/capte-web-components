@@ -66,3 +66,25 @@ When writing custom code embeds for Webflow, reference the canonical token varia
   background: var(--capte-action-primary-hover, #DD3603);
 }
 ```
+
+---
+
+## 🤖 Automated Cloud Sync (Figma ⇄ GitHub Actions)
+
+To prevent design-to-code drift without requiring local daemon processes, this repository features an automated cloud pipeline:
+
+```
+┌────────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│  Figma Design System   │ ───> │  GitHub Actions (Daily) │ ───> │  Automated Pull Request │
+│  (Edits / Token Bumps) │      │  (.github/workflows/)   │      │  (figma-sync/daily-upd) │
+└────────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
+```
+
+1. **Daily Cloud Execution**: Every day at 9:00 AM UTC, GitHub Actions runs [`.github/workflows/figma-sync.yml`](../.github/workflows/figma-sync.yml).
+2. **REST API State Inspection**: The runner executes [`scripts/figma-sync.js`](../scripts/figma-sync.js), authenticated via the encrypted repository secret `FIGMA_ACCESS_TOKEN`.
+3. **Change Detection**: It queries the Figma REST API for file `oFZw7IVtiURZG2x5XhAKyD`, comparing the file's `lastModified` timestamp and `version` against `design-system/.figma-sync.json`.
+4. **Automated Pull Request**: If changes are detected in Figma:
+   - The workflow updates the sync metadata.
+   - It automatically cuts a branch (`figma-sync/daily-update`) and opens a Pull Request for John Hansen with a clear diff.
+   - You can review and merge the token updates with a single click.
+5. **Manual Trigger**: You can also trigger the sync on demand at any time from GitHub's **Actions** tab by selecting **Figma Design System Daily Sync → Run workflow**.
