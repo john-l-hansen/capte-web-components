@@ -22,7 +22,7 @@ Authority is strictly scoped to domain functions. Timestamp recency does not aut
 | Domain | Authoritative Scope | What to Carry into a Task |
 | :--- | :--- | :--- |
 | **Google Drive** | Business requirements, sales specs, strategic decisions, approved copy. | Doc URL, section, approval date, decision owner. |
-| **Figma** | Visual design intent, UI layouts, interactive states, design tokens. | File/node URL, version/date, breakpoint specs. |
+| **Figma** | Visual design intent, UI layouts, interactive states, design tokens. | [Capte Design System](https://www.figma.com/design/oFZw7IVtiURZG2x5XhAKyD/Capte-%E2%80%94-Design-System?node-id=826-5425&t=dLQ3wZ6taQyM5qSf-1) file/node URL, version/date, breakpoint specs. |
 | **GitHub** | Implementation code, version history, PR reviews, technical documentation. | Repo path, commit SHA, branch name, PR link. |
 | **Webflow** | Live deployed runtime state, page structures, published embeds. | Site/page URL, domain, embed location, deployed timestamp. |
 
@@ -30,20 +30,22 @@ Authority is strictly scoped to domain functions. Timestamp recency does not aut
 
 ## 3. Brand Tokens & Design System Baseline
 
-These values represent the active brand implementation baseline:
+The full codified design system with 217 variables is housed in **[`design-system/`](design-system/README.md)** (CSS custom properties in [`design-system/tokens.css`](design-system/tokens.css) and JSON in [`design-system/tokens.json`](design-system/tokens.json)).
+
+Key baseline highlights:
 
 | Token / Purpose | Value | Notes |
 | :--- | :--- | :--- |
-| **Primary Brand Blue** | `#001384` | Structural elements, headings, brand anchor |
-| **Accent Orange** | `#E85B28` | Interactive CTAs only (hover: `#cf4f22`) |
+| **Primary Brand Blue** | `#001384` / `#093AEC` | Structural elements, headings, brand anchor |
+| **Accent Orange** | `#FC5522` / `#E85B28` | Interactive CTAs only (hover: `#DD3603` / `#cf4f22`) |
 | **Surface (Clean)** | `#FFFFFF` | Primary card and page surface |
-| **Muted Surface Tint** | `#DCEDFF` | Subtle containers, media placeholders, badges |
-| **Body Text** | `#0F0F11` | Primary readable typography |
-| **Muted Text / Borders** | `#7B8491` | Secondary captions, disabled states, borders |
-| **Typography** | `Roboto`, Arial, sans-serif | Industrial-modern font stack |
-| **Inline Element Radius** | `0.25rem` (4px) | Buttons, inline tags, form fields |
-| **Floating Surface Radius** | `0.75rem` (12px) | Floating cards, modals, popovers |
-| **Pill / Badge Radius** | `999px` | Badges, dismiss buttons, pill tags |
+| **Muted Surface Tint** | `#DCEDFF` / `#F2F4FC` | Subtle containers, media placeholders, badges |
+| **Body Text** | `#111523` / `#0F0F11` | Primary readable typography |
+| **Muted Text / Borders** | `#7B8491` / `#B0B6BF` | Secondary captions, disabled states, borders |
+| **Typography** | `Roboto`, Arial, sans-serif | Industrial-modern font stack (`Roboto Mono` for technical labels) |
+| **Inline Element Radius** | `0.25rem` (4px) | Buttons, inline tags, form fields (`--capte-radius-sm`) |
+| **Floating Surface Radius** | `0.75rem` (12px) | Floating cards, modals, popovers (`--capte-radius-lg`) |
+| **Pill / Badge Radius** | `9999px` | Badges, dismiss buttons, pill tags (`--capte-radius-full`) |
 
 ---
 

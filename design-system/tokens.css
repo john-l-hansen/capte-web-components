@@ -1,0 +1,210 @@
+/**
+ * Capte Design System — Canonical CSS Design Tokens
+ * Source: Figma Design System (https://www.figma.com/design/oFZw7IVtiURZG2x5XhAKyD/Capte-%E2%80%94-Design-System)
+ * Synced: 2026-09-09
+ */
+
+:root {
+  /* =========================================================================
+     1. COLOR PRIMITIVES (Base Ramps)
+     ========================================================================= */
+
+  /* Primary Blue Ramp (Brand Anchor) */
+  --capte-primitive-primary-50:  #F2F4FC;
+  --capte-primitive-primary-100: #E1E6FA;
+  --capte-primitive-primary-200: #C3CDF5;
+  --capte-primitive-primary-300: #96A8EE;
+  --capte-primitive-primary-400: #607CE5;
+  --capte-primitive-primary-500: #093AEC;
+  --capte-primitive-primary-600: #001C7F;
+  --capte-primitive-primary-700: #001384;
+  --capte-primitive-primary-800: #001358;
+  --capte-primitive-primary-900: #000C38;
+
+  /* Secondary Orange Ramp (Accent / Actions) */
+  --capte-primitive-secondary-50:  #FDF4F1;
+  --capte-primitive-secondary-100: #FBE4DE;
+  --capte-primitive-secondary-200: #F8C8BD;
+  --capte-primitive-secondary-300: #F3A392;
+  --capte-primitive-secondary-400: #EE7960;
+  --capte-primitive-secondary-500: #FC5522; /* Primary Action / CTA */
+  --capte-primitive-secondary-600: #DD3603; /* Action Hover */
+  --capte-primitive-secondary-700: #A62903; /* Action Pressed */
+  --capte-primitive-secondary-800: #781D02;
+  --capte-primitive-secondary-900: #4B1201;
+  --capte-primitive-secondary-950: #280A01;
+
+  /* Neutral Cool-Gray Ramp */
+  --capte-primitive-neutral-white: #FFFFFF;
+  --capte-primitive-neutral-50:    #F2F3F6;
+  --capte-primitive-neutral-100:   #E6E8EC;
+  --capte-primitive-neutral-200:   #D0D2D9;
+  --capte-primitive-neutral-300:   #B0B6BF;
+  --capte-primitive-neutral-400:   #9198A6;
+  --capte-primitive-neutral-500:   #7B8491;
+  --capte-primitive-neutral-600:   #5C6475;
+  --capte-primitive-neutral-700:   #404654;
+  --capte-primitive-neutral-800:   #282D37;
+  --capte-primitive-neutral-900:   #181C26;
+  --capte-primitive-neutral-950:   #111523;
+  --capte-primitive-neutral-black: #000000;
+
+
+  /* =========================================================================
+     2. SEMANTIC TOKENS — LIGHT MODE (Default)
+     ========================================================================= */
+
+  /* Text Colors */
+  --capte-text-primary:        var(--capte-primitive-neutral-950);   /* #111523 */
+  --capte-text-secondary:      var(--capte-primitive-neutral-600);   /* #5C6475 */
+  --capte-text-tertiary:       var(--capte-primitive-neutral-400);   /* #9198A6 */
+  --capte-text-accent:         var(--capte-primitive-secondary-500); /* #FC5522 */
+  --capte-text-link:           var(--capte-primitive-secondary-500); /* #FC5522 */
+  --capte-text-inverse:        var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-text-inverse-muted:  var(--capte-primitive-neutral-300);   /* #B0B6BF */
+  --capte-text-disabled:       var(--capte-primitive-neutral-300);   /* #B0B6BF */
+  --capte-text-placeholder:    var(--capte-primitive-neutral-400);   /* #9198A6 */
+  --capte-text-on-primary:     var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-text-on-accent:      var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-text-error:          #991B1B;
+  --capte-text-success:        #166534;
+  --capte-text-warning:        #92400E;
+  --capte-text-info:           #1D5B97;
+
+  /* Background Colors */
+  --capte-bg-page:                   var(--capte-primitive-neutral-50);    /* #F2F3F6 */
+  --capte-bg-surface:                var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-bg-subtle:                 var(--capte-primitive-neutral-100);   /* #E6E8EC */
+  --capte-bg-muted:                  var(--capte-primitive-neutral-200);   /* #D0D2D9 */
+  --capte-bg-strong:                 var(--capte-primitive-neutral-300);   /* #B0B6BF */
+  --capte-bg-inverse:                var(--capte-primitive-neutral-950);   /* #111523 */
+  --capte-bg-primary:                var(--capte-primitive-primary-50);    /* #F2F4FC */
+  --capte-bg-primary-subtle:         var(--capte-primitive-primary-100);   /* #E1E6FA */
+  --capte-bg-brand:                  var(--capte-primitive-primary-500);   /* #093AEC */
+  --capte-bg-brand-dark:             var(--capte-primitive-primary-600);   /* #001C7F */
+  --capte-bg-brand-xdark:            var(--capte-primitive-primary-900);   /* #000C38 */
+  --capte-bg-accent-secondary:       var(--capte-primitive-secondary-500); /* #FC5522 */
+  --capte-bg-accent-secondary-dark:  var(--capte-primitive-secondary-700); /* #A62903 */
+  --capte-bg-default:                var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-bg-raised:                 var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-bg-sunken:                 var(--capte-primitive-neutral-100);   /* #E6E8EC */
+  --capte-bg-overlay:                var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-bg-disabled:               var(--capte-primitive-neutral-100);   /* #E6E8EC */
+
+  /* Border Colors */
+  --capte-border-subtle:     var(--capte-primitive-neutral-100);   /* #E6E8EC */
+  --capte-border-default:    var(--capte-primitive-neutral-200);   /* #D0D2D9 */
+  --capte-border-moderate:   var(--capte-primitive-neutral-300);   /* #B0B6BF */
+  --capte-border-strong:     var(--capte-primitive-neutral-400);   /* #9198A6 */
+  --capte-border-inverse:    var(--capte-primitive-neutral-950);   /* #111523 */
+  --capte-border-focus:      var(--capte-primitive-primary-500);   /* #093AEC (Accessibility Ring) */
+  --capte-border-accent:     var(--capte-primitive-secondary-500); /* #FC5522 */
+  --capte-border-on-inverse: var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-border-error:      #FCA5A5;
+  --capte-border-success:    #86EFAC;
+  --capte-border-warning:    #FCD34D;
+  --capte-border-info:       #73BBF9;
+
+  /* Interactive / Actions */
+  --capte-action-primary:              var(--capte-primitive-secondary-500); /* #FC5522 */
+  --capte-action-primary-hover:        var(--capte-primitive-secondary-600); /* #DD3603 */
+  --capte-action-primary-pressed:      var(--capte-primitive-secondary-700); /* #A62903 */
+  --capte-action-disabled:             var(--capte-primitive-neutral-200);   /* #D0D2D9 */
+  --capte-action-foreground:           var(--capte-primitive-neutral-white); /* #FFFFFF */
+  --capte-action-foreground-disabled:  var(--capte-primitive-neutral-300);   /* #B0B6BF */
+
+  /* Feedback Colors */
+  --capte-feedback-success-bg:               #F0FDF4;
+  --capte-feedback-success-border:           #86EFAC;
+  --capte-feedback-success-foreground:       #166534;
+  --capte-feedback-success-solid:            #22C55E;
+  --capte-feedback-success-solid-foreground: #FFFFFF;
+
+  --capte-feedback-warning-bg:               #FFFBEB;
+  --capte-feedback-warning-border:           #FCD34D;
+  --capte-feedback-warning-foreground:       #92400E;
+  --capte-feedback-warning-solid:            #F59E0B;
+  --capte-feedback-warning-solid-foreground: #1C1917;
+
+  --capte-feedback-error-bg:                 #FEF2F2;
+  --capte-feedback-error-border:             #FCA5A5;
+  --capte-feedback-error-foreground:         #991B1B;
+  --capte-feedback-error-solid:              #EF4444;
+  --capte-feedback-error-solid-foreground:   #FFFFFF;
+
+  --capte-feedback-info-bg:                  #EFF7FE;
+  --capte-feedback-info-border:              #73BBF9;
+  --capte-feedback-info-foreground:          #1D5B97;
+  --capte-feedback-info-solid:               #2588E4;
+  --capte-feedback-info-solid-foreground:    #FFFFFF;
+
+  /* Illustration & Technical Diagram Palette */
+  --capte-illustration-accent:        #FF5E36;
+  --capte-illustration-accent-light:  #FFECE7;
+  --capte-illustration-accent-muted:  #FF8E72;
+  --capte-illustration-positive:      #94C973;
+  --capte-illustration-positive-light:#EEF7EC;
+  --capte-illustration-surface:       #F7F9FC;
+  --capte-illustration-surface-alt:   #D9E3F0;
+  --capte-illustration-border:        #E8EDF5;
+  --capte-illustration-nav-surface:   #E9F0FD;
+
+
+  /* =========================================================================
+     3. SPACING SCALE (4px Base Unit)
+     ========================================================================= */
+  --capte-space-0:    0px;
+  --capte-space-half: 0.125rem; /* 2px */
+  --capte-space-1:    0.25rem;  /* 4px */
+  --capte-space-2:    0.5rem;   /* 8px */
+  --capte-space-3:    0.75rem;  /* 12px */
+  --capte-space-4:    1rem;     /* 16px */
+  --capte-space-5:    1.25rem;  /* 20px */
+  --capte-space-6:    1.5rem;   /* 24px */
+  --capte-space-7:    1.75rem;  /* 28px */
+  --capte-space-8:    2rem;     /* 32px */
+  --capte-space-10:   2.5rem;   /* 40px */
+  --capte-space-12:   3rem;     /* 48px */
+  --capte-space-14:   3.5rem;   /* 56px */
+  --capte-space-16:   4rem;     /* 64px */
+  --capte-space-20:   5rem;     /* 80px */
+  --capte-space-24:   6rem;     /* 96px */
+  --capte-space-32:   8rem;     /* 128px */
+  --capte-space-48:   12rem;    /* 192px */
+
+
+  /* =========================================================================
+     4. BORDER RADIUS SCALE
+     ========================================================================= */
+  --capte-radius-none: 0px;
+  --capte-radius-xs:   0.125rem; /* 2px */
+  --capte-radius-sm:   0.25rem;  /* 4px (Standard Inline UI) */
+  --capte-radius-md:   0.5rem;   /* 8px */
+  --capte-radius-lg:   0.75rem;  /* 12px (Floating Cards / Modals) */
+  --capte-radius-xl:   1rem;     /* 16px */
+  --capte-radius-2xl:  1.5rem;   /* 24px */
+  --capte-radius-full: 9999px;   /* Full Pill */
+
+
+  /* =========================================================================
+     5. ELEVATION / SHADOWS
+     ========================================================================= */
+  --capte-shadow-sm:   0 2px 8px rgba(0, 19, 132, 0.08);
+  --capte-shadow-md:   0 6px 16px rgba(0, 19, 132, 0.12);
+  --capte-shadow-lg:   0 12px 32px rgba(0, 19, 132, 0.16);
+  --capte-shadow-xl:   0 20px 48px rgba(0, 19, 132, 0.22);
+
+
+  /* =========================================================================
+     6. TYPOGRAPHY
+     ========================================================================= */
+  --capte-font-sans: "Roboto", Arial, sans-serif;
+  --capte-font-mono: "Roboto Mono", monospace;
+
+  /* Font Weights */
+  --capte-weight-light:    300;
+  --capte-weight-regular:  400;
+  --capte-weight-medium:   500;
+  --capte-weight-semibold: 600;
+  --capte-weight-bold:     700;
+}

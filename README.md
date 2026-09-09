@@ -72,6 +72,7 @@ components/
 
 ## 📚 Agent Guidance & Governance
 
+- **[design-system/](design-system/README.md)** — Codified design tokens, CSS variables (`tokens.css`), JSON tokens (`tokens.json`), and Figma specs.
 - **[AGENTS.md](AGENTS.md)** — Canonical shared contract, brand tokens, and standards.
 - **[docs/agent-workflow.md](docs/agent-workflow.md)** — Multi-agent operating model, startup/handoff protocols, and conflict resolution.
 - **[CLAUDE.md](CLAUDE.md)** — Adapter for Claude projects.
