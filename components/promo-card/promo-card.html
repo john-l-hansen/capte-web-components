@@ -1,0 +1,461 @@
+<!--
+  ============================================================================
+  Capte — Region + campaign promo card ("promo-card")
+  ============================================================================
+
+  WHAT THIS IS
+  A lightweight promotional card that appears bottom-right on a page, but
+  only for visitors who are (a) in an approved country, based on approximate
+  IP location, and (b) viewing during a defined campaign window. Links
+  straight to a registration page. Built to be reused for future
+  region-specific campaigns by editing the CONFIG block only.
+
+  HOW TO USE THIS FILE
+  1. In Webflow Designer, add an Embed element to the Home page, in the spot
+     you want the card to live in the DOM (end of the page body is fine —
+     it's position: fixed, so DOM order doesn't affect where it appears
+     on screen).
+  2. Paste this entire file into that Embed.
+  3. Edit the CONFIG object below for this campaign: id, countries, start/end
+     dates, registration link, and copy. That's the only part that changes
+     per campaign.
+  4. Publish to a domain that serves through Capte's production Cloudflare
+     setup (capte.co / www.capte.co) — see "IMPORTANT LIMITATION" below.
+
+  HOW ELIGIBILITY IS DECIDED
+  - Country: capte.co is served through Cloudflare (confirmed 2026-09-09).
+    Cloudflare exposes a same-origin endpoint, /cdn-cgi/trace, that returns
+    the visitor's approximate country from their IP address — no API key,
+    no rate limit, no third-party service, and critically, no browser
+    permission prompt (this is IP-based, not device GPS). This is the
+    lightest, most reliable option for this specific site.
+  - Campaign window: a plain start/end timestamp comparison against the
+    visitor's local clock (Date.now()).
+  - Both checks must pass for the card to render. If either check can't be
+    completed (e.g., the trace request fails), the card fails CLOSED —
+    it simply doesn't show, rather than guessing.
+
+  IMPORTANT LIMITATION — read before QA
+  The /cdn-cgi/trace endpoint depends on Cloudflare sitting in front of the
+  domain. That's true for the published capte.co domain, but is NOT
+  guaranteed to be true on a Webflow staging URL (*.webflow.io). If you test
+  on a .webflow.io link and the card never appears, that's expected — test
+  on the live custom domain instead. A `?promoDebug=1` query param is
+  provided below to bypass geo + dismissal state during QA (campaign dates
+  still apply) so you're not blocked on domain setup while testing layout.
+
+  ACCESSIBILITY
+  - The card is a labelled region, not a modal — it never traps focus or
+    blocks the page.
+  - The close control is a real <button> with an accessible name.
+  - The registration link is a real <a> with descriptive text (not
+    "click here" / "learn more").
+  - Entry animation is skipped entirely under prefers-reduced-motion.
+
+  REUSING FOR THE NEXT CAMPAIGN
+  Duplicate this Embed, change every field in CONFIG (especially `id` —
+  it's what keys the "already dismissed" memory, so a new id means a
+  visitor who dismissed a past campaign will still see the new one), and
+  update the copy. Nothing else needs to change.
+  ============================================================================
+-->
+
+<div class="promo-card" id="promo-card" data-promo-card hidden>
+  <button type="button" class="promo-card_close" data-promo-close aria-label="Dismiss promotion">
+    <svg class="promo-card_close-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+      <path d="M2 2L14 14M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div class="promo-card_media" data-promo-media hidden>
+    <img class="promo-card_image" data-promo-image src="" alt="" width="64" height="64" loading="lazy">
+  </div>
+
+  <div class="promo-card_body">
+    <p class="promo-card_eyebrow" data-promo-eyebrow></p>
+    <p class="promo-card_heading" data-promo-heading></p>
+    <p class="promo-card_description" data-promo-description></p>
+    <a class="promo-card_cta" data-promo-cta href="#">
+      <span data-promo-cta-label></span>
+      <svg class="promo-card_cta-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  /* ---------------------------------------------------------------------
+     Tokens — pulled from Capte's existing brand + spacing scale so this
+     component stays consistent with the rest of the site. If/when the
+     site's border-radius-* and spacing-* Webflow variables are wired up
+     to real styles, swap these var() fallbacks for the real tokens.
+     --------------------------------------------------------------------- */
+  .promo-card {
+    --promo-color-primary: #001384;   /* Capte primary blue — structure */
+    --promo-color-accent: #E85B28;    /* Capte primary orange — CTA only */
+    --promo-color-accent-hover: #cf4f22;
+    --promo-color-surface: #FFFFFF;
+    --promo-color-surface-muted: #DCEDFF;
+    --promo-color-body: #0F0F11;
+    --promo-color-muted: #7B8491;
+
+    --promo-radius: 0.75rem;          /* slightly more rounded than the
+                                          0.25rem inline-card radius —
+                                          this is a floating, friendlier
+                                          surface, not inline content */
+    --promo-space-2: 0.5rem;          /* spacing-2 = 8px */
+    --promo-space-4: 1rem;            /* spacing-4 = 16px */
+    --promo-space-6: 1.5rem;          /* spacing-6 = 24px */
+
+    --promo-shadow: 0 12px 32px rgba(0, 19, 132, 0.16);
+    --promo-z: 999;                   /* check against any cookie-consent
+                                          banner / chat widget z-index
+                                          before launch — see QA notes */
+  }
+
+  .promo-card {
+    position: fixed;
+    right: var(--promo-space-6);
+    bottom: var(--promo-space-6);
+    z-index: var(--promo-z);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--promo-space-4);
+    max-width: 22rem;
+    padding: var(--promo-space-4) var(--promo-space-6) var(--promo-space-4) var(--promo-space-4);
+    background: var(--promo-color-surface);
+    border-radius: var(--promo-radius);
+    box-shadow: var(--promo-shadow);
+    font-family: "Roboto", Arial, sans-serif;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+
+  .promo-card[hidden] { display: none; }
+
+  .promo-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .promo-card {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  .promo-card_close {
+    position: absolute;
+    top: var(--promo-space-2);
+    right: var(--promo-space-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--promo-color-muted);
+    cursor: pointer;
+  }
+
+  .promo-card_close:hover { background: var(--promo-color-surface-muted); color: var(--promo-color-primary); }
+  .promo-card_close:focus-visible {
+    outline: 2px solid var(--promo-color-primary);
+    outline-offset: 2px;
+  }
+
+  .promo-card_media {
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--promo-color-surface-muted);
+  }
+
+  .promo-card_media[hidden] { display: none; }
+
+  .promo-card_image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .promo-card_body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .promo-card_eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--promo-color-accent);
+  }
+
+  .promo-card_eyebrow:empty { display: none; }
+
+  .promo-card_heading {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--promo-color-primary);
+  }
+
+  .promo-card_description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--promo-color-body);
+  }
+
+  .promo-card_description:empty { display: none; }
+
+  .promo-card_cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--promo-color-accent);
+    text-decoration: none;
+  }
+
+  .promo-card_cta:hover { color: var(--promo-color-accent-hover); text-decoration: underline; }
+  .promo-card_cta:focus-visible {
+    outline: 2px solid var(--promo-color-primary);
+    outline-offset: 2px;
+  }
+
+  .promo-card_cta-icon { flex: none; }
+
+  /* -------------------------------------------------------------------
+     Tablet / small laptop — smaller floating card, same corner.
+     ------------------------------------------------------------------- */
+  @media (max-width: 767px) {
+    .promo-card {
+      max-width: 18rem;
+      right: var(--promo-space-4);
+      bottom: var(--promo-space-4);
+      padding: var(--promo-space-4);
+      gap: var(--promo-space-2);
+    }
+
+    .promo-card_media { width: 2.5rem; height: 2.5rem; }
+  }
+
+  /* -------------------------------------------------------------------
+     Phone — collapses into a full-width bottom bar. Description drops
+     to keep it thumb-reachable and short; heading + CTA stay.
+     ------------------------------------------------------------------- */
+  @media (max-width: 479px) {
+    .promo-card {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-width: none;
+      width: 100%;
+      align-items: center;
+      border-radius: var(--promo-radius) var(--promo-radius) 0 0;
+      padding: var(--promo-space-2) var(--promo-space-6) var(--promo-space-2) var(--promo-space-4);
+      transform: translateY(100%);
+    }
+
+    .promo-card.is-visible { transform: translateY(0); }
+
+    .promo-card_media { display: none !important; }
+    .promo-card_description { display: none; }
+    .promo-card_close { top: 50%; transform: translateY(-50%); }
+
+    .promo-card_body {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--promo-space-2);
+      width: 100%;
+    }
+
+    .promo-card_heading { font-size: 0.9375rem; }
+    .promo-card_eyebrow { display: none; }
+  }
+</style>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================================
+     CONFIG — the only section that should change per campaign.
+     ========================================================================= */
+  var CONFIG = {
+    // Unique per campaign. Changing this is what makes a new campaign show
+    // again for someone who dismissed a previous one.
+    id: "example-campaign-2026",
+
+    // ISO 3166-1 alpha-2 country codes eligible to see the card.
+    countries: ["US", "CA"],
+
+    // Campaign window, in UTC ("Z") to sidestep daylight-saving edge cases.
+    // Comment the local-time equivalent so the team can sanity-check it.
+    startISO: "2026-10-01T00:00:00Z", // e.g. 2026-09-30 8:00 PM ET
+    endISO: "2026-10-15T03:59:59Z",   // e.g. 2026-10-14 11:59 PM ET
+
+    href: "https://capte.co/register",
+
+    eyebrow: "Live event",
+    heading: "Join us at [Event name]",
+    description: "Register now for [event name] — sessions fill up fast.",
+    ctaLabel: "Register",
+
+    // Optional. Leave imageSrc empty to hide the media slot entirely.
+    imageSrc: "",
+    imageAlt: ""
+  };
+
+  /* =========================================================================
+     Below this line is the reusable mechanism — shouldn't need to change
+     per campaign.
+     ========================================================================= */
+
+  var STORAGE_PREFIX = "capte:promo:";
+  var GEO_CACHE_KEY = "capte:geo-country";
+
+  function withinCampaignWindow(config, now) {
+    var start = Date.parse(config.startISO);
+    var end = Date.parse(config.endISO);
+    return now >= start && now <= end;
+  }
+
+  function wasDismissed(config) {
+    try {
+      return sessionStorage.getItem(STORAGE_PREFIX + config.id) === "1";
+    } catch (e) {
+      return false; // storage unavailable (e.g. private mode) — fail open here,
+                     // since a missed dismissal is low-stakes.
+    }
+  }
+
+  function markDismissed(config) {
+    try {
+      sessionStorage.setItem(STORAGE_PREFIX + config.id, "1");
+    } catch (e) { /* ignore */ }
+  }
+
+  function getCachedCountry() {
+    try {
+      return sessionStorage.getItem(GEO_CACHE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setCachedCountry(code) {
+    try {
+      sessionStorage.setItem(GEO_CACHE_KEY, code);
+    } catch (e) { /* ignore */ }
+  }
+
+  // Resolves with a two-letter country code, or null if it can't be
+  // determined. Never rejects — callers should treat null as "unknown"
+  // and fail closed (don't show the card).
+  function resolveCountry() {
+    var cached = getCachedCountry();
+    if (cached) return Promise.resolve(cached);
+
+    return fetch("/cdn-cgi/trace", { credentials: "omit" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("trace request failed: " + res.status);
+        return res.text();
+      })
+      .then(function (text) {
+        var match = /loc=([A-Z]{2})/.exec(text);
+        var code = match ? match[1] : null;
+        if (code) setCachedCountry(code);
+        return code;
+      })
+      .catch(function () {
+        // Most commonly: running on a domain that isn't behind Capte's
+        // Cloudflare setup (e.g. a .webflow.io staging link). Fail closed.
+        return null;
+      });
+  }
+
+  function applyContent(card, config) {
+    card.querySelector("[data-promo-eyebrow]").textContent = config.eyebrow || "";
+    card.querySelector("[data-promo-heading]").textContent = config.heading || "";
+    card.querySelector("[data-promo-description]").textContent = config.description || "";
+    card.querySelector("[data-promo-cta-label]").textContent = config.ctaLabel || "Register";
+    card.querySelector("[data-promo-cta]").setAttribute("href", config.href);
+    card.setAttribute("aria-label", config.heading || "Promotion");
+    card.setAttribute("role", "region");
+
+    var media = card.querySelector("[data-promo-media]");
+    var image = card.querySelector("[data-promo-image]");
+    if (config.imageSrc) {
+      image.src = config.imageSrc;
+      image.alt = config.imageAlt || "";
+      media.hidden = false;
+    } else {
+      media.hidden = true;
+    }
+  }
+
+  function reveal(card) {
+    card.hidden = false;
+    // Next frame, so the opacity/transform transition actually runs.
+    requestAnimationFrame(function () {
+      card.classList.add("is-visible");
+    });
+  }
+
+  function init() {
+    var card = document.getElementById("promo-card");
+    if (!card) return;
+
+    applyContent(card, CONFIG);
+
+    var params = new URLSearchParams(window.location.search);
+    var debug = params.get("promoDebug") === "1";
+
+    if (!debug && !withinCampaignWindow(CONFIG, Date.now())) return;
+    if (!debug && wasDismissed(CONFIG)) return;
+
+    var closeBtn = card.querySelector("[data-promo-close]");
+    closeBtn.addEventListener("click", function () {
+      markDismissed(CONFIG);
+      card.classList.remove("is-visible");
+      card.hidden = true;
+    });
+
+    if (debug) {
+      reveal(card);
+      return;
+    }
+
+    resolveCountry().then(function (country) {
+      if (country && CONFIG.countries.indexOf(country) !== -1) {
+        reveal(card);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
