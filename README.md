@@ -1,31 +1,78 @@
 # capte-web-components
 
-Reusable custom-code components for capte.co, meant to be pasted into a Webflow Embed element. Each component lives in its own folder under `components/` with the code, a usage README, and (where relevant) a changelog and a campaign/launch ledger.
+Reusable custom-code web components for [capte.co](https://www.capte.co), engineered for Webflow Custom Code Embeds.
 
-## Why this repo exists
+This repository serves as the **source of truth, version control, and multi-agent development environment** for all custom embeds powering Capte's digital presence.
 
-Capte's site runs on Webflow with vanilla custom code powering standalone components and integrations (per the design/web-ops standard). Those embeds otherwise live only inside Webflow's Designer with no version history, no diffing, and no record of what was live when. This repo is the source of truth and history for that code — Webflow Designer is the deployment target, not the archive.
+---
 
-## Structure
+## 🏛️ 1. The Foundation — Why & How
+
+### Why this repository exists
+Capte's public marketing website is hosted on Webflow. While Webflow provides visual page design, custom interactive UI, dynamic region gating, and specialized brand features require custom code embeds. 
+- **Webflow Designer is our deployment target, not our archive.** Code pasted directly into Webflow lacks version history, pull request reviews, and historical diffing.
+- This repository houses the canonical source code, design token baselines, and campaign release history.
+
+### The Multi-Agent Operating Model
+We operate across specialized AI agents (Claude, ChatGPT / Codex, Antigravity) with **John Hansen** as the lead designer, web ops owner, and final authority.
+- **Single Source of Truth**: Because agents do not share a live chat socket, the local repository and git commits act as the shared brain.
+- **Domain Authority Matrix**:
+  - 📄 **Google Drive**: Strategic requirements, sales copy, approved business decisions.
+  - 🎨 **Figma**: Visual design intent, interactive UI states, layout tokens.
+  - 💻 **GitHub**: Implementation code, pull request reviews, technical documentation.
+  - 🌐 **Webflow**: Live production runtime and published embed delivery.
+
+For full operating procedures, startup protocols, and handoff templates, see [docs/agent-workflow.md](docs/agent-workflow.md) and [AGENTS.md](AGENTS.md).
+
+---
+
+## 🧩 2. The Components — Why & How
+
+### Why our components are built this way
+Every component is built for frictionless deployment into Webflow:
+- **Zero-Dependency Vanilla Code**: Single-file `.html` containing semantic HTML, encapsulated CSS, and vanilla JS.
+- **Strict CSS Scoping**: Component styles (`.promo-card`, `--promo-*`) are strictly namespaced to prevent collisions with Webflow base styles.
+- **Fail-Closed Robustness**: Components fail gracefully (stay hidden) if network services or geo-lookups are unavailable.
+- **Cloudflare Geo-Targeting**: Uses same-origin `/cdn-cgi/trace` on production `capte.co` (no third-party API keys or device GPS prompts) with a `?promoDebug=1` query parameter for staging QA.
+- **Accessibility & Motion**: Full keyboard navigation, visible focus states, ARIA landmarks, and `prefers-reduced-motion` compliance.
+
+### Component Structure
+Each component is organized inside its own directory under `components/`:
 
 ```
-capte-web-components/
-  components/
-    <component-name>/
-      <component-name>.html   → the actual embed code (HTML + CSS + JS together)
-      README.md                → what it does, how to configure it, QA checklist
-      CHANGELOG.md              → changes to the component's mechanism (not per-launch config edits)
-      campaigns.md               → present only on components with a recurring "launch" cycle —
-                                    a ledger of each time it went live, with what config
+components/
+  <component-name>/
+    ├── <component-name>.html   → Self-contained embed code (HTML + scoped CSS + JS)
+    ├── README.md               → Architecture, configuration schema, and QA checklist
+    ├── CHANGELOG.md             → Semantic version history for mechanism changes
+    └── campaigns.md            → (Optional) Ledger of live campaign launches & configs
 ```
 
-## Workflow
+### Component Workflow
 
-1. Build or update a component's `.html` file in its folder.
-2. Commit mechanism changes with a normal commit message; bump the component's `CHANGELOG.md`.
-3. When a component is config-driven and reused across campaigns/events (like `promo-card`), editing the config block for a new launch is its own commit, and gets tagged: `git tag <component-name>-<campaign-id>` right after publishing to Webflow, then logged as a row in that component's `campaigns.md`.
-4. Paste the current `.html` file into the Webflow Embed element for the relevant page. Webflow is always the deployment step — this repo is what's authoritative before that.
+1. **Build & Update**: Develop the component in `components/<component-name>/<component-name>.html`.
+2. **Mechanism Changes**: Commit code updates with conventional commits and bump the component's `CHANGELOG.md`.
+3. **Campaign Configuration Launches**: For config-driven components (like `promo-card`), update the `CONFIG` block, deploy to Webflow, tag the release:
+   ```bash
+   git tag <component-name>-<campaign-id>
+   git push origin --tags
+   ```
+   and record the deployment row in that component's `campaigns.md`.
+4. **Deploy**: Paste the tested `.html` file into the targeted Webflow Embed element.
 
-## Components
+---
 
-- [`promo-card`](components/promo-card/README.md) — region + campaign-gated promotional card, bottom-right on desktop, collapsing to a bottom bar on mobile. First used for the Fall 2026 NA event campaign.
+## 📦 Active Components
+
+| Component | Status | Description | Documentation |
+| :--- | :--- | :--- | :--- |
+| [`promo-card`](components/promo-card/README.md) | `v1.0.0` (Production Ready) | Region + campaign-gated promotional card. Floats bottom-right on desktop; collapses to a bottom bar on mobile. Built for APTA 2026 and recurring campaigns. | [Read Guide](components/promo-card/README.md) |
+
+---
+
+## 📚 Agent Guidance & Governance
+
+- **[AGENTS.md](AGENTS.md)** — Canonical shared contract, brand tokens, and standards.
+- **[docs/agent-workflow.md](docs/agent-workflow.md)** — Multi-agent operating model, startup/handoff protocols, and conflict resolution.
+- **[CLAUDE.md](CLAUDE.md)** — Adapter for Claude projects.
+- **[.agent/rules/shared-contract.md](.agent/rules/shared-contract.md)** — Adapter for Antigravity workspace rules.
