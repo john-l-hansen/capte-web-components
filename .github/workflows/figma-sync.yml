@@ -1,0 +1,42 @@
+name: Figma Design System Daily Sync
+
+on:
+  schedule:
+    # Runs daily at 9:00 AM UTC (adjust as needed)
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  check-figma-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Figma Sync Script
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          FIGMA_FILE_KEY: "oFZw7IVtiURZG2x5XhAKyD"
+        run: |
+          node scripts/figma-sync.js
+
+      - name: Create Pull Request if Changes Detected
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(design-system): sync updated tokens from Figma"
+          branch: figma-sync/daily-update
+          title: "🎨 Figma Design System Sync Update"
+          body: |
+            ### Automated Figma Token Sync
+            This PR contains updated tokens synced from the **[Capte Figma Design System](https://www.figma.com/design/oFZw7IVtiURZG2x5XhAKyD/Capte-%E2%80%94-Design-System?node-id=826-5425)**.
+
+            Please review the diff in `design-system/tokens.json` and `design-system/tokens.css` before merging.
+          labels: |
+            design-system
+            automated-pr
