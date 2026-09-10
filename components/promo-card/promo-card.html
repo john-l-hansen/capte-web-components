@@ -39,10 +39,22 @@
   The /cdn-cgi/trace endpoint depends on Cloudflare sitting in front of the
   domain. That's true for the published capte.co domain, but is NOT
   guaranteed to be true on a Webflow staging URL (*.webflow.io). If you test
-  on a .webflow.io link and the card never appears, that's expected — test
-  on the live custom domain instead. A `?promoDebug=1` query param is
-  provided below to bypass geo + dismissal state during QA (campaign dates
-  still apply) so you're not blocked on domain setup while testing layout.
+  on a .webflow.io link and geolocation never resolves, verify first by
+  visiting <staging-url>/cdn-cgi/trace directly — if it 404s or doesn't
+  return a `loc=XX` line, that domain isn't behind Cloudflare and the real
+  detection can't run there; use ?promoCountry= (below) to demo anyway.
+
+  DEMO / QA QUERY PARAMS
+  - `?promoCountry=US` (or CA, GB, etc.) — substitutes for the real IP
+    lookup so you can demo actual eligibility — including the campaign
+    window and dismiss behavior — without needing to physically be in an
+    eligible country or fake it with a VPN. Try `US`/`CA` to see it appear,
+    then a non-eligible code like `GB` to prove the gating actually excludes
+    someone.
+  - `?promoDebug=1` — bypasses geo AND campaign window AND dismissal state,
+    always showing the card. Use this only for pure visual/layout checks —
+    it does not exercise the real gating logic, so it's not a substitute for
+    testing with `?promoCountry=`.
 
   ACCESSIBILITY
   - The card is a labelled region, not a modal — it never traps focus or
@@ -430,6 +442,13 @@
     var params = new URLSearchParams(window.location.search);
     var debug = params.get("promoDebug") === "1";
 
+    // Demo/QA aid: ?promoCountry=US (or any code) substitutes for the real
+    // IP lookup so the actual eligibility check can be exercised — country
+    // window, dismiss state, and the country membership test all still run
+    // normally. Use this instead of ?promoDebug=1 whenever the point of the
+    // demo IS the geo gating or dismiss behavior, not just the visuals.
+    var countryOverride = params.get("promoCountry");
+
     if (!debug && !withinCampaignWindow(CONFIG, Date.now())) return;
     if (!debug && wasDismissed(CONFIG)) return;
 
@@ -445,7 +464,11 @@
       return;
     }
 
-    resolveCountry().then(function (country) {
+    var countryPromise = countryOverride
+      ? Promise.resolve(countryOverride.toUpperCase())
+      : resolveCountry();
+
+    countryPromise.then(function (country) {
       if (country && CONFIG.countries.indexOf(country) !== -1) {
         reveal(card);
       }

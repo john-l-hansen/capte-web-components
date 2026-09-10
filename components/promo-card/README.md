@@ -50,6 +50,26 @@ The card doesn't need to be manually removed at the end of a campaign — once `
 
 `/cdn-cgi/trace` depends on Cloudflare fronting the domain. That's confirmed true for `capte.co` / `www.capte.co`, but Webflow's own staging preview (`*.webflow.io`) is not guaranteed to be proxied the same way. If the card never appears while testing on a `.webflow.io` link, that's expected, not a bug — test on the published custom domain.
 
+## Demoing geolocation and dismiss on staging
+
+`?promoDebug=1` (above) is fine for a quick visual check, but it bypasses geo, campaign window, and dismissal entirely — it can't demonstrate that the gating or dismiss actually work. For that, the component now supports a second param: `?promoCountry=<code>`, which substitutes for the real IP lookup but still runs the real eligibility check (campaign window + country membership) and the real dismiss logic.
+
+**Before demoing on any staging URL**, confirm that URL is actually behind Cloudflare — this component's country detection depends on it. Visit `<staging-url>/cdn-cgi/trace` directly in a browser: if you see a plain-text response with a `loc=XX` line, detection will work there; if it 404s or the domain doesn't resolve that path, treat it like a non-Cloudflare domain (the walkthrough below still works using `?promoCountry=`, since that skips the network call entirely).
+
+**A five-minute walkthrough for a stakeholder demo:**
+
+1. Open the staging Home page with `?promoCountry=US` appended. The card should appear exactly as an eligible US visitor would see it — this exercises the real campaign-window and country-membership checks, just with a supplied country instead of a real IP lookup.
+2. Open the same page with `?promoCountry=GB` (or any code outside `CONFIG.countries`) instead. The card should not appear — this is the proof that ineligible visitors are actually excluded, not just that the eligible case happens to work.
+3. Back on `?promoCountry=US`, click the close (×) button. The card should disappear immediately.
+4. Reload the same page (still `?promoCountry=US`). The card should stay hidden — this confirms the session-scoped dismiss (`sessionStorage`) is holding.
+5. To show it reappearing for a new session without opening a fresh incognito window each time, open the browser console and run:
+   ```js
+   sessionStorage.removeItem('capte:promo:<CONFIG.id>')
+   ```
+   (substitute the actual `id` value from `CONFIG`), then reload. The card should reappear, demonstrating that the dismissal is scoped to that one session rather than permanent.
+
+None of this requires a VPN, a real US/Canada IP, or waiting for the real campaign dates — `?promoCountry=` and the console command above are enough to walk someone through the full behavior on staging.
+
 ## QA checklist
 
 - [ ] On the **live custom domain**, append `?promoDebug=1` to the Home page URL — the card should appear regardless of your actual location or campaign dates, so you can check layout/copy/links without waiting for the real window or being in an eligible country. (Close/dismiss and the CTA link still behave normally.)

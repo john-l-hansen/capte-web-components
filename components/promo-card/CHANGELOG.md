@@ -3,6 +3,9 @@
 Mechanism changes only. Campaign launches (config edits) are logged in `campaigns.md`, not here.
 
 ## [Unreleased]
+### Added
+- `?promoCountry=<code>` demo/QA param: substitutes for the real IP lookup while still running the real campaign-window, country-membership, and dismiss logic, so geo gating and dismiss behavior can be demoed on staging without a VPN or waiting for the real campaign window.
+
 
 ## [1.0.0] - 2026-09-09
 ### Added
