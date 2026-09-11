@@ -1,19 +1,55 @@
-# Capte AI Designer Manual (`DESIGN.md`)
+# DESIGN.md — Client-First AI Design System Rules
 
-This document is the authoritative design manual and quick-reference specification for all AI agents (Claude, ChatGPT, Cursor, Antigravity) and human contributors authoring web components and UI for [capte.co](https://www.capte.co).
-
----
-
-## 🏛️ 1. Design Philosophy: "Technically Elegant"
-
-Capte builds advanced positioning and industrial IoT solutions for transit agencies, vehicle fleets, and infrastructure across the U.S. and Europe. All digital and print design must reflect:
-- **Clarity & Restraint**: Clean layouts, generous whitespace, disciplined color application.
-- **Industrial Precision**: Accurate typography, technical labels, sharp data visualization.
-- **Accessibility & Robustness**: Semantic structure, WCAG AA compliance, fail-closed mechanics.
+> **PURPOSE FOR AI AGENT:** 
+> You are an expert Design Engineer enforcing strict Client-First (Webflow) class naming conventions and Figma CSS variable design tokens.
+> Every piece of HTML and CSS generated MUST comply with the rules, structure, and token definitions in this document.
 
 ---
 
-## 🎨 2. Canonical Token Reference (Figma 1:1)
+## 1. Global Guardrails & Anti-Hallucination Rules
+
+- **ZERO Arbitrary Values:** NEVER write raw hex color codes (e.g. `#172b4d`) or arbitrary pixel values for padding, margin, or gaps (e.g. `padding: 18px`). ALL visual values MUST use CSS Custom Properties (`var(--capte-...)` or component-level variables with token fallbacks).
+- **Semantic Markup:** Use clean HTML5 tags (`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`, `<button>`, `<a>`). Avoid unnecessary nested `<div>` containers.
+- **Client-First Class Structure:** Follow Webflow Client-First class naming strictly (`page_wrapper`, `main-wrapper`, `section_[name]`, `padding-global`, `container-[size]`, `padding-section-[size]`, `[component]_[element]`).
+
+---
+
+## 2. Mandatory HTML Page & Section Skeleton
+
+### A. Full Page & Section Layouts
+Every full page layout or new section generated MUST follow this exact Client-First nesting hierarchy:
+
+```html
+<div class="page_wrapper">
+  <main class="main-wrapper">
+    <section class="section_[section-name]">
+      <div class="padding-global">
+        <div class="container-large">
+          <div class="padding-section-large">
+            <!-- Component Content Here -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+```
+
+### B. Standalone Custom Code Embeds (Injected / Floating Widgets)
+For standalone interactive widgets (such as our floating `promo-card`, modal, or calculator) that get pasted into Webflow Embed elements:
+- Do **not** duplicate `page_wrapper` or `main-wrapper` (as they already exist on the Webflow page).
+- Encapsulate the component root using Client-First component namespacing:
+```html
+<div class="[component-name]" id="[component-name]" data-component hidden>
+  <div class="[component-name]_body">
+    <!-- Scoped Component Content -->
+  </div>
+</div>
+```
+
+---
+
+## 3. Canonical Token Reference (Figma 1:1)
 
 Tokens are codified in [`design-system/tokens.css`](design-system/tokens.css) and [`design-system/tokens.json`](design-system/tokens.json), synced from the **[Capte Figma Design System](https://www.figma.com/design/oFZw7IVtiURZG2x5XhAKyD/Capte-%E2%80%94-Design-System?node-id=826-5425)**.
 
@@ -67,15 +103,15 @@ Tokens are codified in [`design-system/tokens.css`](design-system/tokens.css) an
 
 ---
 
-## 🧩 3. Web Component Architecture & Conventions
+## 4. Web Component Architecture & Scoping
 
 All components intended for Webflow Custom Code Embeds must follow these rules:
 
 1. **Single-File Embed Format**: Component `.html` file must contain the HTML markup, scoped `<style>`, and encapsulated `<script>`.
-2. **Strict BEM Class Namespacing**:
-   - Block: `.component-name`
-   - Element: `.component-name_element` (single underscore)
-   - Modifier: `.component-name--modifier` or `.is-state`
+2. **Strict Client-First Component Namespacing**:
+   - Block: `.[component-name]`
+   - Element: `.[component-name]_[element]` (single underscore)
+   - Modifier: `.[component-name]--[modifier]` or `.is-[state]`
 3. **CSS Variable Fallbacks**: Always provide token fallbacks so the component renders cleanly even in standalone previews:
    ```css
    background: var(--capte-bg-surface, #FFFFFF);
@@ -89,17 +125,3 @@ All components intended for Webflow Custom Code Embeds must follow these rules:
    - Use semantic landmarks (`role="region"`, `aria-label`).
    - Real interactive elements (`<button>`, `<a>`) with visible focus outlines (`--capte-border-focus`).
    - Motion safety: Disable transitions under `@media (prefers-reduced-motion: reduce)`.
-
----
-
-## 📁 4. Component Directory Structure
-
-Every component in `components/` adheres to this standard schema:
-
-```text
-components/<component-name>/
-├── <component-name>.html   # Production-ready Webflow embed payload
-├── README.md               # Architecture, config reference, and QA checklist
-├── CHANGELOG.md            # Semantic versioning for mechanism updates
-└── campaigns.md            # (Optional) Ledger for config-driven launches
-```
