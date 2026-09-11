@@ -1,0 +1,105 @@
+# Capte AI Designer Manual (`DESIGN.md`)
+
+This document is the authoritative design manual and quick-reference specification for all AI agents (Claude, ChatGPT, Cursor, Antigravity) and human contributors authoring web components and UI for [capte.co](https://www.capte.co).
+
+---
+
+## 🏛️ 1. Design Philosophy: "Technically Elegant"
+
+Capte builds advanced positioning and industrial IoT solutions for transit agencies, vehicle fleets, and infrastructure across the U.S. and Europe. All digital and print design must reflect:
+- **Clarity & Restraint**: Clean layouts, generous whitespace, disciplined color application.
+- **Industrial Precision**: Accurate typography, technical labels, sharp data visualization.
+- **Accessibility & Robustness**: Semantic structure, WCAG AA compliance, fail-closed mechanics.
+
+---
+
+## 🎨 2. Canonical Token Reference (Figma 1:1)
+
+Tokens are codified in [`design-system/tokens.css`](design-system/tokens.css) and [`design-system/tokens.json`](design-system/tokens.json), synced from the **[Capte Figma Design System](https://www.figma.com/design/oFZw7IVtiURZG2x5XhAKyD/Capte-%E2%80%94-Design-System?node-id=826-5425)**.
+
+### Color Palette
+| Token Variable | Hex / Value | Role / Usage |
+| :--- | :--- | :--- |
+| `--capte-primitive-primary-700` | `#001384` | Capte Brand Blue — headings, structural anchors |
+| `--capte-primitive-primary-500` | `#093AEC` | Interactive focus rings (`--capte-border-focus`) |
+| `--capte-primitive-secondary-500` | `#FC5522` | Primary Action / CTA Orange (`--capte-action-primary`) |
+| `--capte-primitive-secondary-600` | `#DD3603` | CTA Hover state (`--capte-action-primary-hover`) |
+| `--capte-primitive-secondary-700` | `#A62903` | CTA Pressed state (`--capte-action-primary-pressed`) |
+| `--capte-primitive-neutral-950` | `#111523` | Primary Body Text (`--capte-text-primary`) |
+| `--capte-primitive-neutral-600` | `#5C6475` | Secondary Muted Text (`--capte-text-secondary`) |
+| `--capte-primitive-neutral-400` | `#9198A6` | Tertiary Text / Placeholders (`--capte-text-tertiary`) |
+| `--capte-primitive-neutral-200` | `#D0D2D9` | Default Borders (`--capte-border-default`) |
+| `--capte-primitive-neutral-100` | `#E6E8EC` | Subtle Backgrounds / Dividers (`--capte-bg-subtle`) |
+| `--capte-primitive-neutral-50` | `#F2F3F6` | Page Background (`--capte-bg-page`) |
+| `--capte-primitive-neutral-white` | `#FFFFFF` | Card / Surface Background (`--capte-bg-surface`) |
+| `--capte-primitive-primary-50` | `#F2F4FC` | Muted Blue Surface / Badges (`--capte-bg-primary`) |
+
+### Spacing Scale (4px Base Unit)
+```css
+--capte-space-0:    0px;
+--capte-space-half: 0.125rem; /* 2px */
+--capte-space-1:    0.25rem;  /* 4px */
+--capte-space-2:    0.5rem;   /* 8px */
+--capte-space-3:    0.75rem;  /* 12px */
+--capte-space-4:    1rem;     /* 16px */
+--capte-space-5:    1.25rem;  /* 20px */
+--capte-space-6:    1.5rem;   /* 24px */
+--capte-space-8:    2rem;     /* 32px */
+--capte-space-12:   3rem;     /* 48px */
+--capte-space-16:   4rem;     /* 64px */
+```
+
+### Corner Radii
+```css
+--capte-radius-none: 0px;
+--capte-radius-xs:   0.125rem; /* 2px */
+--capte-radius-sm:   0.25rem;  /* 4px — Standard inline UI / buttons */
+--capte-radius-md:   0.5rem;   /* 8px */
+--capte-radius-lg:   0.75rem;  /* 12px — Floating cards, popovers, modals */
+--capte-radius-xl:   1rem;     /* 16px */
+--capte-radius-full: 9999px;   /* Badges, pills, circular buttons */
+```
+
+### Typography Hierarchy
+- **Font Stack**: `"Roboto", Arial, sans-serif` (Technical labels: `"Roboto Mono", monospace`).
+- **Headings**: Medium or Bold weight, tight line-heights (1.1–1.3).
+- **Body**: Regular (400) or Medium (500), line-height 1.5–1.6.
+
+---
+
+## 🧩 3. Web Component Architecture & Conventions
+
+All components intended for Webflow Custom Code Embeds must follow these rules:
+
+1. **Single-File Embed Format**: Component `.html` file must contain the HTML markup, scoped `<style>`, and encapsulated `<script>`.
+2. **Strict BEM Class Namespacing**:
+   - Block: `.component-name`
+   - Element: `.component-name_element` (single underscore)
+   - Modifier: `.component-name--modifier` or `.is-state`
+3. **CSS Variable Fallbacks**: Always provide token fallbacks so the component renders cleanly even in standalone previews:
+   ```css
+   background: var(--capte-bg-surface, #FFFFFF);
+   color: var(--capte-text-primary, #111523);
+   ```
+4. **Fail-Closed Mechanics**: Any dynamic or geo-gated feature must remain hidden (`hidden` attribute + `display: none`) until all eligibility criteria pass.
+5. **Standard QA Query Overrides**:
+   - `?promoCountry=US`: Substitutes IP lookup to test geo-gating logic.
+   - `?promoDebug=1`: Bypasses all gating for pure visual layout verification.
+6. **Accessibility Standards**:
+   - Use semantic landmarks (`role="region"`, `aria-label`).
+   - Real interactive elements (`<button>`, `<a>`) with visible focus outlines (`--capte-border-focus`).
+   - Motion safety: Disable transitions under `@media (prefers-reduced-motion: reduce)`.
+
+---
+
+## 📁 4. Component Directory Structure
+
+Every component in `components/` adheres to this standard schema:
+
+```text
+components/<component-name>/
+├── <component-name>.html   # Production-ready Webflow embed payload
+├── README.md               # Architecture, config reference, and QA checklist
+├── CHANGELOG.md            # Semantic versioning for mechanism updates
+└── campaigns.md            # (Optional) Ledger for config-driven launches
+```
