@@ -207,4 +207,40 @@
   --capte-weight-medium:   500;
   --capte-weight-semibold: 600;
   --capte-weight-bold:     700;
+
+
+  /* =========================================================================
+     7. CLIENT-FIRST LAYOUT TOKENS & ALIASES
+     ========================================================================= */
+
+  /* Client-First Colors (Aliased to Capte Figma Tokens) */
+  --color-bg-primary:          var(--capte-bg-surface);              /* #FFFFFF */
+  --color-bg-secondary:        var(--capte-bg-page);                 /* #F2F3F6 */
+  --color-text-main:           var(--capte-text-primary);            /* #111523 */
+  --color-text-muted:          var(--capte-text-secondary);          /* #5C6475 */
+  --color-brand-accent:        var(--capte-action-primary);          /* #FC5522 */
+  --color-border-subtle:       var(--capte-border-default);          /* #D0D2D9 */
+
+  /* Client-First Section & Global Spacing */
+  --padding-global:            2.5rem;                               /* 40px */
+  --section-padding-large:     7rem;                                 /* 112px */
+  --section-padding-medium:    4.5rem;                               /* 72px */
+  --section-padding-small:     3rem;                                 /* 48px */
+
+  /* Client-First Spacing Aliases */
+  --space-xs:                  var(--capte-space-2);                 /* 8px */
+  --space-sm:                  var(--capte-space-4);                 /* 16px */
+  --space-md:                  var(--capte-space-6);                 /* 24px */
+  --space-lg:                  var(--capte-space-8);                 /* 32px */
+  --space-xl:                  var(--capte-space-12);                /* 48px */
+
+  /* Layout Containers (Matches Capte 1280px Grid) */
+  --container-large:           80rem;                                /* 1280px */
+  --container-medium:          64rem;                                /* 1024px */
+  --container-small:           48rem;                                /* 768px */
+
+  /* Radius Aliases */
+  --radius-sm:                 var(--capte-radius-sm);               /* 4px */
+  --radius-md:                 var(--capte-radius-md);               /* 8px */
+  --radius-lg:                 var(--capte-radius-lg);               /* 12px */
 }
