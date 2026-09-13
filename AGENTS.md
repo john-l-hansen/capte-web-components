@@ -1,8 +1,8 @@
 # Capte Design & Web Ops — Canonical Agent Contract
 
-This is the canonical repository contract for all AI agents collaborating on Capte's digital design and web operations (including Claude, ChatGPT / OpenAI Codex, and Google Antigravity). Tool-specific configuration files (such as `CLAUDE.md` and `.agent/rules/`) serve as thin adapters pointing here and must not maintain conflicting policy.
+This is the canonical repository contract for all AI agents collaborating on Capte's digital design and web operations (including Claude, ChatGPT / OpenAI Codex, Google Antigravity, and Cursor). All operational workflows and adapters are governed by the supreme laws established in **[CONSTITUTION.md](CONSTITUTION.md)**.
 
-For operational procedures, handoff templates, conflict resolution, and deployment protocols, read [docs/agent-workflow.md](docs/agent-workflow.md).
+For detailed operational procedures, handoff templates, conflict resolution, and deployment protocols, read [docs/agent-workflow.md](docs/agent-workflow.md). For Client-First styling rules and design tokens, read [DESIGN.md](DESIGN.md).
 
 ---
 
