@@ -72,6 +72,14 @@ components/
 
 ---
 
+## 🛠️ Internal Marketing & Ops Tools
+
+| Tool | Status | Description | Documentation |
+| :--- | :--- | :--- | :--- |
+| [`blog-section-anchors`](tools/blog-section-anchors/README.md) | `v1.0.0` | Browser bookmarklet & console extractor that generates heading deep-link URLs from published blog posts to support section-level social campaigns. | [Read Guide](tools/blog-section-anchors/README.md) |
+
+---
+
 ## 📚 Agent Guidance & Governance
 
 - **[CONSTITUTION.md](CONSTITUTION.md)** — Supreme, non-negotiable laws governing all human & AI collaboration across Capte web ops.

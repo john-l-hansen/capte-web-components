@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capte — Blog Section-Anchor Link Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --capte-blue: #001384;
+      --capte-blue-hover: #093AEC;
+      --capte-orange: #FC5522;
+      --capte-orange-hover: #DD3603;
+      --capte-surface: #FFFFFF;
+      --capte-surface-muted: #F2F4FC;
+      --capte-border: #DDE2EE;
+      --capte-text: #111523;
+      --capte-text-muted: #626A7A;
+      --capte-radius-sm: 4px;
+      --capte-radius-md: 8px;
+      --capte-radius-lg: 12px;
+      --capte-radius-full: 9999px;
+      --capte-shadow: 0 4px 20px rgba(0, 19, 132, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--capte-text);
+      background-color: var(--capte-surface-muted);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--capte-surface);
+      border-radius: var(--capte-radius-lg);
+      border: 1px solid var(--capte-border);
+      box-shadow: var(--capte-shadow);
+      padding: 40px;
+    }
+
+    header {
+      border-bottom: 2px solid var(--capte-surface-muted);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--capte-blue);
+      background: #EAF0FF;
+      padding: 4px 10px;
+      border-radius: var(--capte-radius-full);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--capte-blue);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    p.lead {
+      color: var(--capte-text-muted);
+      font-size: 15px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--capte-text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: var(--capte-blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 50%;
+    }
+
+    .bookmarklet-box {
+      background: #FAFBFE;
+      border: 2px dashed #BAC9FC;
+      border-radius: var(--capte-radius-md);
+      padding: 28px;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .bookmarklet-btn {
+      display: inline-block;
+      background-color: var(--capte-orange);
+      color: #ffffff !important;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: var(--capte-radius-sm);
+      cursor: grab;
+      box-shadow: 0 2px 8px rgba(252, 85, 34, 0.25);
+      transition: background-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .bookmarklet-btn:hover {
+      background-color: var(--capte-orange-hover);
+      transform: translateY(-1px);
+    }
+
+    .bookmarklet-hint {
+      font-size: 13px;
+      color: var(--capte-text-muted);
+      margin-top: 12px;
+    }
+
+    pre {
+      background: #0F1424;
+      color: #DDE2EE;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 12px;
+      padding: 16px;
+      border-radius: var(--capte-radius-md);
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 12px 0;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--capte-surface-muted);
+      border: 1px solid var(--capte-border);
+      color: var(--capte-text);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: var(--capte-radius-sm);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #E2E7F5;
+    }
+
+    .notice {
+      background: #FFF9E6;
+      border-left: 4px solid #E6A700;
+      padding: 12px 16px;
+      border-radius: 0 var(--capte-radius-sm) var(--capte-radius-sm) 0;
+      font-size: 13px;
+      color: #5C4300;
+      margin: 16px 0;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Interactive Demo Area */
+    .demo-area {
+      border: 1px solid var(--capte-border);
+      border-radius: var(--capte-radius-md);
+      padding: 20px;
+      background: #fff;
+      margin-top: 16px;
+    }
+
+    .demo-heading {
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .demo-tag {
+      display: inline-block;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      color: var(--capte-text-muted);
+      background: var(--capte-surface-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="badge">Marketing & Ops Utility</span>
+      <h1>Blog Section-Anchor Link Tool</h1>
+      <p class="lead">Extract deep-link URLs for every H2 & H3 on any published Capte blog post in 1 click.</p>
+    </header>
+
+    <!-- Option 1: Bookmarklet -->
+    <div class="section">
+      <h2><span class="step-number">1</span> Option A: 1-Click Bookmarklet (Recommended for Marketing)</h2>
+      <p style="font-size: 14px; color: var(--capte-text-muted);">
+        Drag the button below directly up into your browser's <strong>Bookmarks Bar</strong>:
+      </p>
+
+      <div class="bookmarklet-box">
+        <a class="bookmarklet-btn" id="bookmarklet-link" href="#">🔗 Capte Section Links</a>
+        <p class="bookmarklet-hint">💡 Drag this button to your bookmarks bar. When viewing any live blog post on <a href="https://capte.co" target="_blank" style="color:var(--capte-blue);">capte.co</a>, click it to instantly copy all section URLs.</p>
+      </div>
+    </div>
+
+    <!-- Option 2: DevTools Console -->
+    <div class="section">
+      <h2><span class="step-number">2</span> Option B: DevTools Console (For Technical Workflows)</h2>
+      <p style="font-size: 14px; color: var(--capte-text-muted);">
+        Open the published blog post in Chrome/Safari/Firefox &rarr; Right Click &rarr; <strong>Inspect</strong> &rarr; <strong>Console</strong> &rarr; paste and run:
+      </p>
+
+      <pre id="code-block"><code>(function() {
+  const base = location.origin + location.pathname;
+  const headings = [...(document.querySelector('article, .blog-post, .w-richtext, main') || document.body).querySelectorAll('h2, h3')];
+  const idCounts = {};
+  const lines = [];
+  headings.forEach(h => {
+    const text = (h.textContent || '').trim().replace(/\s+/g, ' ');
+    const id = h.id ? h.id.trim() : '';
+    if (!id) {
+      lines.push(`⚠️ ${h.tagName} "${text}"\n[No ID assigned — heading may contain non-ASCII/symbols]`);
+      return;
+    }
+    idCounts[id] = (idCounts[id] || 0) + 1;
+    const flag = idCounts[id] > 1 ? '⚠️ DUPLICATE ID (unreachable):\n' : '';
+    lines.push(`${flag}${h.tagName}: "${text}"\n${base}#${id}`);
+  });
+  const out = `--- Capte Blog Section Links (${headings.length} headings) ---\n\n` + lines.join('\n\n');
+  console.log(out);
+  navigator.clipboard.writeText(out).then(() => console.log('✅ Copied to clipboard'));
+})();</code></pre>
+
+      <button class="btn-secondary" id="copy-code-btn">📋 Copy Console Code</button>
+    </div>
+
+    <!-- Known Limitations -->
+    <div class="section">
+      <h2><span class="step-number">3</span> Known Limitations & Best Practices</h2>
+      
+      <div class="notice">
+        <strong>⚠️ Heading Stability:</strong>
+        IDs are dynamically calculated from heading text on page load. If an article's heading text is edited in Webflow CMS after links are shared, older anchor links will gracefully fall back to the top of the article. Pull section links only once an article's headings are final.
+      </div>
+
+      <div class="notice" style="background:#F2F4FC; border-left-color:var(--capte-blue); color:var(--capte-text);">
+        <strong>💡 Duplicate & Language Protection:</strong>
+        Headings with identical names (e.g. repeated "Overview" sections) or symbol-only text are automatically flagged by this tool so your marketing team avoids broken link campaigns.
+      </div>
+    </div>
+
+    <!-- Interactive Test Area -->
+    <div class="section">
+      <h2><span class="step-number">4</span> Try It Out (Test Area)</h2>
+      <p style="font-size: 14px; color: var(--capte-text-muted);">
+        Click the bookmarklet button above or run the script right now to test on these sample headings:
+      </p>
+
+      <div class="demo-area">
+        <h2 class="demo-heading" id="telematics-overview">1. Telematics Architecture <span class="demo-tag">#telematics-overview</span></h2>
+        <h3 class="demo-heading" id="can-bus-integration">1.1 CAN Bus Direct Integration <span class="demo-tag">#can-bus-integration</span></h3>
+        <h3 class="demo-heading" id="rtk-accuracy">1.2 RTK Precision Positioning <span class="demo-tag">#rtk-accuracy</span></h3>
+        <h2 class="demo-heading" id="hardware-specifications">2. Hardware Specifications <span class="demo-tag">#hardware-specifications</span></h2>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Build bookmarklet href
+    const scriptCode = `javascript:(function(){const b=location.origin+location.pathname,s=document.querySelector('article,.blog-post,.w-richtext,main')||document.body,hs=[...s.querySelectorAll('h2,h3')];if(!hs.length){alert('⚠️ No H2/H3 headings found on this page.');return;}const c={},ls=[];let d=0,m=0;hs.forEach(h=>{const t=(h.textContent||'').trim().replace(/\\s+/g,' '),i=h.id?h.id.trim():'';if(!i){m++;ls.push('⚠️ '+h.tagName+' "'+t+'"\\n[No ID assigned]');return;}c[i]=(c[i]||0)+1;const f=c[i]>1?(d++,'⚠️ DUPLICATE ID:\\n'):'';ls.push(f+h.tagName+': "'+t+'"\\n'+b+'#'+i);});const out='--- Capte Blog Section Links ('+hs.length+' headings) ---\\n'+(d?'⚠️ '+d+' duplicate(s)\\n':'')+(m?'⚠️ '+m+' missing ID(s)\\n':'')+'--------------------------------------------------\\n\\n'+ls.join('\\n\\n');console.log(out);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(()=>{alert('✅ Copied '+hs.length+' section links to clipboard! Check console for full list.');}).catch(()=>{alert('✅ Printed to console (clipboard access denied)');});}else{alert('✅ Printed to console');}})();`;
+
+    const bookmarkletEl = document.getElementById('bookmarklet-link');
+    bookmarkletEl.setAttribute('href', scriptCode);
+
+    document.getElementById('copy-code-btn').addEventListener('click', () => {
+      const code = document.getElementById('code-block').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copy-code-btn');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy Console Code', 2000);
+      });
+    });
+  </script>
+</body>
+</html>
