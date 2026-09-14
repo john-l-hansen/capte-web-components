@@ -224,27 +224,29 @@
     <header>
       <span class="badge">Marketing & Ops Utility</span>
       <h1>Blog Section-Anchor Link Tool</h1>
-      <p class="lead">Extract deep-link URLs for every H2 & H3 on any published Capte blog post in 1 click.</p>
+      <p class="lead">Extract deep-link URLs for every H2 & H3 on any published Capte blog post formatted cleanly as <code>[heading] — [URL]</code>.</p>
     </header>
 
     <!-- Option 1: Bookmarklet -->
     <div class="section">
-      <h2><span class="step-number">1</span> Option A: 1-Click Bookmarklet (Recommended for Marketing)</h2>
+      <h2><span class="step-number">1</span> Option A: Bookmarklet (Recommended for Marketing)</h2>
       <p style="font-size: 14px; color: var(--capte-text-muted);">
-        Drag the button below directly up into your browser's <strong>Bookmarks Bar</strong>:
+        Drag the button below directly into your browser's <strong>Bookmarks Bar</strong>, or create a bookmark and paste the URL code:
       </p>
 
       <div class="bookmarklet-box">
         <a class="bookmarklet-btn" id="bookmarklet-link" href="#">🔗 Capte Section Links</a>
-        <p class="bookmarklet-hint">💡 Drag this button to your bookmarks bar. When viewing any live blog post on <a href="https://capte.co" target="_blank" style="color:var(--capte-blue);">capte.co</a>, click it to instantly copy all section URLs.</p>
+        <p class="bookmarklet-hint">💡 When viewing any live blog post on <a href="https://capte.co" target="_blank" style="color:var(--capte-blue);">capte.co</a>, click it to instantly copy all section URLs formatted as <code>[heading] — [URL]</code>.</p>
       </div>
+
+      <button class="btn-secondary" id="copy-bookmarklet-code">📋 Copy Bookmarklet Code (For Manual Bookmark URL)</button>
     </div>
 
     <!-- Option 2: DevTools Console -->
     <div class="section">
       <h2><span class="step-number">2</span> Option B: DevTools Console (For Technical Workflows)</h2>
       <p style="font-size: 14px; color: var(--capte-text-muted);">
-        Open the published blog post in Chrome/Safari/Firefox &rarr; Right Click &rarr; <strong>Inspect</strong> &rarr; <strong>Console</strong> &rarr; paste and run:
+        Open the published blog post &rarr; Right Click &rarr; <strong>Inspect</strong> &rarr; <strong>Console</strong> &rarr; paste and run:
       </p>
 
       <pre id="code-block"><code>(function() {
@@ -256,14 +258,14 @@
     const text = (h.textContent || '').trim().replace(/\s+/g, ' ');
     const id = h.id ? h.id.trim() : '';
     if (!id) {
-      lines.push(`⚠️ ${h.tagName} "${text}"\n[No ID assigned — heading may contain non-ASCII/symbols]`);
+      lines.push(`⚠️ NO ID: ${text} — (no id assigned)`);
       return;
     }
     idCounts[id] = (idCounts[id] || 0) + 1;
-    const flag = idCounts[id] > 1 ? '⚠️ DUPLICATE ID (unreachable):\n' : '';
-    lines.push(`${flag}${h.tagName}: "${text}"\n${base}#${id}`);
+    const prefix = idCounts[id] > 1 ? '⚠️ DUPLICATE: ' : '';
+    lines.push(`${prefix}${text} — ${base}#${id}`);
   });
-  const out = `--- Capte Blog Section Links (${headings.length} headings) ---\n\n` + lines.join('\n\n');
+  const out = lines.join('\n');
   console.log(out);
   navigator.clipboard.writeText(out).then(() => console.log('✅ Copied to clipboard'));
 })();</code></pre>
@@ -281,8 +283,8 @@
       </div>
 
       <div class="notice" style="background:#F2F4FC; border-left-color:var(--capte-blue); color:var(--capte-text);">
-        <strong>💡 Duplicate & Language Protection:</strong>
-        Headings with identical names (e.g. repeated "Overview" sections) or symbol-only text are automatically flagged by this tool so your marketing team avoids broken link campaigns.
+        <strong>💡 Output Format:</strong>
+        Output is formatted line-by-line as <code>[heading] — [URL]</code> for immediate copy-pasting into Notion, Slack, Google Docs, or social schedulers.
       </div>
     </div>
 
@@ -303,17 +305,24 @@
   </div>
 
   <script>
-    // Build bookmarklet href
-    const scriptCode = `javascript:(function(){const b=location.origin+location.pathname,s=document.querySelector('article,.blog-post,.w-richtext,main')||document.body,hs=[...s.querySelectorAll('h2,h3')];if(!hs.length){alert('⚠️ No H2/H3 headings found on this page.');return;}const c={},ls=[];let d=0,m=0;hs.forEach(h=>{const t=(h.textContent||'').trim().replace(/\\s+/g,' '),i=h.id?h.id.trim():'';if(!i){m++;ls.push('⚠️ '+h.tagName+' "'+t+'"\\n[No ID assigned]');return;}c[i]=(c[i]||0)+1;const f=c[i]>1?(d++,'⚠️ DUPLICATE ID:\\n'):'';ls.push(f+h.tagName+': "'+t+'"\\n'+b+'#'+i);});const out='--- Capte Blog Section Links ('+hs.length+' headings) ---\\n'+(d?'⚠️ '+d+' duplicate(s)\\n':'')+(m?'⚠️ '+m+' missing ID(s)\\n':'')+'--------------------------------------------------\\n\\n'+ls.join('\\n\\n');console.log(out);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(()=>{alert('✅ Copied '+hs.length+' section links to clipboard! Check console for full list.');}).catch(()=>{alert('✅ Printed to console (clipboard access denied)');});}else{alert('✅ Printed to console');}})();`;
+    const scriptCode = `javascript:(function(){const b=location.origin+location.pathname,s=document.querySelector('article,.blog-post,.w-richtext,main')||document.body,hs=[...s.querySelectorAll('h2,h3')];if(!hs.length){alert('⚠️ No H2/H3 headings found on this page.');return;}const c={},ls=[];hs.forEach(h=>{const t=(h.textContent||'').trim().replace(/\\s+/g,' '),i=h.id?h.id.trim():'';if(!i){ls.push('⚠️ NO ID: '+t+' — (no id assigned)');return;}c[i]=(c[i]||0)+1;const p=c[i]>1?'⚠️ DUPLICATE: ':'';ls.push(p+t+' — '+b+'#'+i);});const out=ls.join('\\n');console.log(out);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(()=>{alert('✅ Copied '+hs.length+' section links to clipboard!\\n\\nFormat: [heading] — [URL]');}).catch(()=>{alert('✅ Printed to console (clipboard access denied)');});}else{alert('✅ Printed to console');}})();`;
 
     const bookmarkletEl = document.getElementById('bookmarklet-link');
     bookmarkletEl.setAttribute('href', scriptCode);
+
+    document.getElementById('copy-bookmarklet-code').addEventListener('click', () => {
+      navigator.clipboard.writeText(scriptCode).then(() => {
+        const btn = document.getElementById('copy-bookmarklet-code');
+        btn.textContent = '✅ Copied Bookmarklet Code!';
+        setTimeout(() => btn.textContent = '📋 Copy Bookmarklet Code (For Manual Bookmark URL)', 2000);
+      });
+    });
 
     document.getElementById('copy-code-btn').addEventListener('click', () => {
       const code = document.getElementById('code-block').innerText;
       navigator.clipboard.writeText(code).then(() => {
         const btn = document.getElementById('copy-code-btn');
-        btn.textContent = '✅ Copied!';
+        btn.textContent = '✅ Copied Console Code!';
         setTimeout(() => btn.textContent = '📋 Copy Console Code', 2000);
       });
     });

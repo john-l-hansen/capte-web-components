@@ -38,20 +38,10 @@ Capte's long-form technical articles (transit telematics, precision positioning,
 ## 📋 Sample Output Format
 
 ```text
---- Capte Blog Section Links (4 headings found) ---
-----------------------------------------------------------------
-
-H2: "1. Industrial Telematics Overview"
-https://www.capte.co/blog/precision-transit-telematics#industrial-telematics-overview
-
-H3: "1.1 CAN Bus High-Speed Decoding"
-https://www.capte.co/blog/precision-transit-telematics#can-bus-high-speed-decoding
-
-H3: "1.2 Dual-Frequency RTK Precision"
-https://www.capte.co/blog/precision-transit-telematics#dual-frequency-rtk-precision
-
-H2: "2. Deployment Architecture"
-https://www.capte.co/blog/precision-transit-telematics#deployment-architecture
+1. Industrial Telematics Overview — https://www.capte.co/blog/precision-transit-telematics#industrial-telematics-overview
+1.1 CAN Bus High-Speed Decoding — https://www.capte.co/blog/precision-transit-telematics#can-bus-high-speed-decoding
+1.2 Dual-Frequency RTK Precision — https://www.capte.co/blog/precision-transit-telematics#dual-frequency-rtk-precision
+2. Deployment Architecture — https://www.capte.co/blog/precision-transit-telematics#deployment-architecture
 ```
 
 ---

@@ -4,14 +4,17 @@
  * Extracts heading anchors (H2, H3) from published Capte blog posts to enable
  * marketing teams to generate section-specific deep links for social posts.
  * 
+ * Output Format:
+ * [heading] — [URL]
+ * 
  * Works as a browser console script or bookmarklet.
- * Repository: https://github.com/john-l-hansen/capte-web-components
+ * Repository: https://github.com/john-l-hansen/capte-web-operations
  */
 
 (function extractBlogSectionAnchors() {
   const base = location.origin + location.pathname;
   
-  // Query H2 and H3 headings inside the article body if available, or fall back to document
+  // Query H2 and H3 headings inside article scope if available, or fall back to document body
   const articleScope = document.querySelector('article, .blog-post, .w-richtext, main') || document.body;
   const headings = [...articleScope.querySelectorAll('h2, h3')];
 
@@ -33,27 +36,22 @@
 
     if (!id) {
       missingIdCount++;
-      lines.push(`⚠️ ${h.tagName} "${text}"\n[No ID assigned — heading may contain unsupported non-ASCII/symbol characters]`);
+      lines.push(`⚠️ NO ID: ${text} — (no id assigned)`);
       return;
     }
 
     idCounts[id] = (idCounts[id] || 0) + 1;
-    let flag = '';
+    let prefix = '';
     if (idCounts[id] > 1) {
       duplicateCount++;
-      flag = '⚠️ DUPLICATE ID (browser will only jump to the first occurrence):\n';
+      prefix = '⚠️ DUPLICATE: ';
     }
 
-    lines.push(`${flag}${h.tagName}: "${text}"\n${base}#${id}`);
+    // Clean format: [heading] — [URL]
+    lines.push(`${prefix}${text} — ${base}#${id}`);
   });
 
-  const output = lines.join('\n\n');
-  const summaryHeader = `--- Capte Blog Section Links (${headings.length} headings found) ---\n` +
-    (duplicateCount > 0 ? `⚠️ ${duplicateCount} duplicate ID(s) detected\n` : '') +
-    (missingIdCount > 0 ? `⚠️ ${missingIdCount} heading(s) missing IDs\n` : '') +
-    `----------------------------------------------------------------\n\n`;
-
-  const fullOutput = summaryHeader + output;
+  const fullOutput = lines.join('\n');
 
   // Output to DevTools console
   console.log(fullOutput);
@@ -62,7 +60,7 @@
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(fullOutput)
       .then(() => {
-        console.log('✅ Section links successfully copied to clipboard!');
+        console.log(`✅ ${headings.length} section links copied to clipboard!`);
         showToast(`✅ Copied ${headings.length} section links to clipboard!`);
       })
       .catch(err => {
